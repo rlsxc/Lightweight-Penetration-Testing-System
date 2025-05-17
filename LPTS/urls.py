@@ -21,11 +21,11 @@ from django.conf.urls.static import static
 from .views import *
 
 urlpatterns = [
-                  path("admin/", admin.site.urls),
-                  path('users/', include('users.urls')),
-                  path("InfoCollect/", include('InfoCollect.urls')),  # 信息收集
-                  path('', index, name='index'),
-                  path('', include('vulnscan.urls')),  # 漏洞检测
-                  path('', include('dirscan.urls')),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path("admin/", admin.site.urls),
+    path('users/', include('users.urls')),
+    path("info-collect/", include('InfoCollect.urls')),  # 信息收集
+    path('vulnscan/', include('vulnscan.urls')),        # 漏洞检测
+    path('dirscan/', include('dirscan.urls')),          # 目录扫描
+    path('', index, name='index'),                      # 主页（最后定义，确保优先级）
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
