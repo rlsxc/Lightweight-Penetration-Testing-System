@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Collection</title>
+    <!-- 引入 Bootstrap 样式表 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-4">Info Collection</h1>
+        <form id="infoForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="param1">Param1:</label>
+                <input type="text" class="form-control" id="param1" name="param1">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="infoResults" class="mt-4"></div>
+
+        <div id="loadingMessage" class="alert alert-info" style="display: none;" role="alert">稍等一下，马上就好...</div>
+    </div>
+
+    <!-- 引入 Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('infoForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            var formData = new FormData(event.target); // Get form data
+            
+            // Display loading message
+            document.getElementById('loadingMessage').style.display = 'block';
+
+            fetch('{% url 'InfoCollect:info_col' %}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json()) // Parse JSON response
+            .then(data => {
+                // Hide loading message
+                document.getElementById('loadingMessage').style.display = 'none';
+                
+                // Display JSON data on the page
+                document.getElementById('infoResults').innerHTML = JSON.stringify(data, null, 4);
+            })
+            .catch(error => {
+                // Hide loading message
+                document.getElementById('loadingMessage').style.display = 'none';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

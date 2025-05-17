@@ -1,0 +1,23 @@
+{% extends 'users/base.html' %}
+
+
+{% block head %}
+    <title>Reset Password</title>
+{% endblock head %}
+
+
+
+{% block page %}
+    <h5 class="title text-center mb-4">Reset Page</h5>
+    <hr>
+    <form method="post">
+  {% csrf_token %}
+    {{ form.as_p }}
+         <div class="clearfix" style="color: #fff;">{{ form.errors}}</div>
+                        <div class="clearfix"></div>
+                    <button type="submit" class="btn btn-primary btn-block mt-4">Reset Now</button>
+</form>
+
+</form>
+
+{% endblock page %}

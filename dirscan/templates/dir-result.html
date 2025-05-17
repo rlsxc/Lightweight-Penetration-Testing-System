@@ -1,0 +1,105 @@
+{% extends 'InfoCollect/base.html' %}
+{% load static %}
+{% block title %}
+    <title>目录扫描结果</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">目录扫描结果</h1>
+        <p class="lead">以下是扫描结果的详细信息。</p>
+        <hr class="my-4">
+        <div class="text-center">
+            <a href="{% url 'get-target' %}" class="btn btn-primary btn-lg">导出结果</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">URL</th>
+                <th scope="col">状态码</th>
+                <th scope="col">重定向</th>
+            </tr>
+        </thead>
+        <tbody id="resultsTableBody">
+            <!-- 初始内容可以为空 -->
+        </tbody>
+    </table>
+</div>
+
+<div id="errorAlert" class="container" style="display: none;">
+    <div class="alert alert-danger" role="alert">
+        <!-- 错误信息将在这里显示 -->
+    </div>
+</div>
+
+<div id="scanCompleteAlert" class="container" style="display: none;">
+    <div class="alert alert-success" role="alert">
+        目录扫描完成
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    var refreshInterval;
+    var stopRefreshTimeout;
+
+    function fetchData() {
+        $.ajax({
+            url: "{% url 'fetch-results' %}",
+            method: "GET",
+            dataType: "json",
+            success: function(data) {
+                // 清空现有的表格内容
+                var tableBody = $("#resultsTableBody");
+                tableBody.empty();
+
+                // 添加新的数据行
+                $.each(data.results, function(index, result) {
+                    var row = $("<tr>");
+                    row.append($("<td>").html('<a href="' + result.url + '">' + result.url + '</a>'));
+                    row.append($("<td>").text(result.status));
+                    row.append($("<td>").text(result.redirect));
+                    tableBody.append(row);
+                });
+
+                // 显示或隐藏错误信息
+                if (data.error) {
+                    $('#errorAlert .alert').text(data.error);
+                    $('#errorAlert').show();
+                } else {
+                    $('#errorAlert').hide();
+                }
+
+                // 显示或隐藏扫描完成信息
+                if (data.scan_complete) {
+                    $('#scanCompleteAlert').show();
+                } else {
+                    $('#scanCompleteAlert').hide();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    // 每隔10秒刷新一次数据
+    refreshInterval = setInterval(fetchData, 20000);
+    // 初次加载时也调用一次
+    fetchData();
+
+    // 8分钟后停止刷新
+    stopRefreshTimeout = setTimeout(function() {
+        clearInterval(refreshInterval);
+        console.log('Stopped refreshing after 8 minutes');
+    }, 8 * 60 * 1000);  // 8分钟 = 8 * 60 * 1000 毫秒
+});
+</script>
+
+{% endblock %}

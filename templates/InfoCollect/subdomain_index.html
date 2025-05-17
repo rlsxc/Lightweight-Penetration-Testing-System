@@ -1,0 +1,70 @@
+{% extends 'InfoCollect/base.html' %}
+{% block title %}
+    <title>子域名扫描</title>
+{% endblock %}
+{% block body%}
+    <div class="container">
+  <div class="jumbotron">
+    <h1>子域名扫描</h1>
+    <div style="padding: 50px 0;">
+      <form class="bs-example bs-example-form" role="form">
+        <div class="row">
+          <div class="col-lg-10">
+            <div class="input-group">
+              <input id="inputField" type="text" class="form-control" placeholder="请输入域名获取子域名资产，example:baidu.com">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="startScan()">Start Scanning</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <p id="scanStatus"></p>
+  </div>
+</div>
+<table class="table">
+  <thead id="scanResultHead">
+  </thead>
+  <tbody id="scanResult">
+    <!-- 这里的内容将由JavaScript动态生成 -->
+  </tbody>
+</table>
+    <script>
+function startScan() {
+    // 清空表格内容
+    $('#scanResultHead').empty();
+    $('#scanResult').empty();
+    $('#scanStatus').text('正在全力获取子域名信息中，请稍等...');
+    var inputText = $('#inputField').val().trim();
+    if(inputText !== '') {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'InfoCollect:subdomain' %}",
+            data: {input: inputText},
+            success: function(response) {
+                if ('scan_result' in response) {
+                    $('#scanStatus').text('扫描完成');
+                    // 显示扫描结果
+                    $('#scanResultHead').html('<tr><th>序号</th><th>域名</th><th>IP地址</th><th>是否CDN</th></tr>');
+                    var subdomainScanData = response['scan_result'];
+                    subdomainScanData.forEach(function(entry, index) {
+                            var domain = entry.domain;
+                            var iplist = entry.iplist.join(', '); // 将IP地址列表转换为字符串
+                            var isCDN = entry.isCDN ? '是' : '否';
+                            var row = '<tr><td>' + (index + 1) + '</td><td>' + domain + '</td><td>' + iplist + '</td><td>' + isCDN + '</td></tr>';
+                            $('#scanResult').append(row);
+});
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('发生错误：', error);
+                alert(error);
+            }
+        });
+    } else {
+        alert('请输入要扫描的内容');
+    }
+}
+</script>
+{% endblock %}

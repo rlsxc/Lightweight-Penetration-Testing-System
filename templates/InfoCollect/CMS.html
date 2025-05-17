@@ -1,0 +1,82 @@
+{% extends 'InfoCollect/base.html' %}
+
+ {% block title %}
+            <title>指纹识别</title>
+ {% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>指纹识别</h1>
+    <div style="padding: 50px 0;">
+      <form class="bs-example bs-example-form" role="form">
+        <div class="row">
+          <div class="col-lg-10">
+            <div class="input-group">
+              <input id="inputField" type="text" class="form-control" placeholder="请输入网站地址进行指纹识别，example:https://ctf.show/">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="startScan()">Start Scanning</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <p id="scanStatus"></p>
+  </div>
+</div>
+<table class="table">
+  <thead id="scanResultHead">
+  </thead>
+  <tbody id="scanResult">
+    <!-- 这里的内容将由JavaScript动态生成 -->
+  </tbody>
+</table>
+    <script>
+function startScan() {
+    // 清空表格内容
+    $('#scanResultHead').empty();
+    $('#scanResult').empty();
+    $('#scanStatus').text('正在扫描，请稍等...');
+    var inputText = $('#inputField').val().trim();
+    if(inputText !== '') {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'InfoCollect:CMS' %}",
+            data: {input: inputText},
+            success: function(response) {
+                if ('scan_result' in response){
+                     var responseString = response.scan_result;
+                     // 假设responseString是以逗号分隔的字符串
+                var responseArray = responseString.split(','); // 将字符串分割成数组
+
+                // 过滤掉可能的空元素或多余空格
+                responseArray = responseArray.map(function(item) {
+                    return item.trim();
+                });
+                // 添加表头
+                $('#scanResultHead').append('<tr><th>Info</th></tr>');
+
+                // 遍历并添加表格行
+                for (var i = 0; i < responseArray.length; i += 1) {
+                    var data = responseArray[i];
+                    $('#scanResult').append('<tr><td>' + data + '</td></tr>');
+                }
+                // 更新扫描状态
+                $('#scanStatus').text('扫描完成');
+                }
+
+            },
+            error: function(xhr, status, error) {
+                console.error('发生错误：', error);
+                alert(error);
+            }
+        });
+    } else {
+        alert('请输入要扫描的内容');
+        $('#scanStatus').empty();
+    }
+}
+</script>
+
+{% endblock body %}

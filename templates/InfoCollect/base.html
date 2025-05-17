@@ -1,0 +1,88 @@
+{% load static %}
+{% include 'layout/header.html'%}
+<!DOCTYPE html>
+<html lang="en">    
+<head>    
+    <meta charset="UTF-8">
+    {% block title %}
+            <title>端口扫描</title>
+    {% endblock %}
+    <!-- 引入 Bootstrap CSS -->  
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- 字体-->
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+</head>    
+<body>
+{% block body %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>端口扫描</h1>
+    <div style="padding: 50px 0;">
+      <form class="bs-example bs-example-form" role="form">
+        <div class="row">
+          <div class="col-lg-10">
+            <div class="input-group">
+              <input id="inputField" type="text" class="form-control" placeholder="请输入网站ip地址进行端口扫描，支持域名，example:baidu.com">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="startScan()">Start Scanning</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <p id="scanStatus"></p>
+  </div>
+</div>
+<table class="table">
+  <thead id="scanResultHead">
+  </thead>
+  <tbody id="scanResult">
+    <!-- 这里的内容将由JavaScript动态生成 -->
+  </tbody>
+</table>
+    <script>
+function startScan() {
+    // 清空表格内容
+    $('#scanResultHead').empty();
+    $('#scanResult').empty();
+    $('#scanStatus').text('正在扫描，请稍等...');
+    var inputText = $('#inputField').val().trim();
+    if(inputText !== '') {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'InfoCollect:port_scan' %}",
+            data: {input: inputText},
+            success: function(response) {
+                {#console.log('扫描结果：', response);#}
+                if ('scan_result' in response) {
+                    $('#scanStatus').text('扫描完成');
+                    // 显示扫描结果
+                    $('#scanResultHead').html('<tr><th>服务</th><th>端口号</th></tr>');
+                    var portScanData = response['scan_result'];
+                    portScanData.forEach(function(port) {
+                      var parts = port.split(':');
+                      var serviceName = parts[0];
+                      var portNumber = parts[1];
+                      var row = '<tr><td>' + serviceName + '</td><td>' + portNumber + '</td></tr>';
+                      $('#scanResult').append(row);
+});
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('发生错误：', error);
+                alert(error);
+            }
+        });
+    } else {
+        alert('请输入要扫描的内容');
+        $('#scanStatus').empty();
+    }
+}
+</script>
+
+{% endblock body %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>    
+</html>

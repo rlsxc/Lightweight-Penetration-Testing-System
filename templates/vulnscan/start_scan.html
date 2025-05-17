@@ -1,0 +1,16 @@
+{% extends 'InfoCollect/base.html' %}
+{% block body %}
+    <div class="container mt-5"> <!-- 添加容器和上边距 -->
+        <h1 class="text-center">漏洞扫描</h1>
+        <form method="post" action="{% url 'vulnscan:vuln_scan' %}" class="form-group mt-4"> <!-- 添加表单样式 -->
+            {% csrf_token %}
+            <div class="input-group mb-3"> <!-- 使用 Bootstrap 的 input-group -->
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">漏洞扫描:</span>
+                </div>
+                <input type="text" class="form-control" id="ip_address" name="ip_address" required aria-describedby="basic-addon1" placeholder="请输入网站url进行扫描">
+            </div>
+            <button type="submit" class="btn btn-primary">开始扫描</button> <!-- 使用 Bootstrap 的按钮样式 -->
+        </form>
+    </div>
+{% endblock body %}

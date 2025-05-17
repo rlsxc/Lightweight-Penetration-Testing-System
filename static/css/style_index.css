@@ -1,0 +1,34 @@
+/* 通用样式 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.hero-section {
+    background-image: url("{% static 'img/hero-background.jpg' %}"); /* 替换为你的背景图片 */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.features-section .card {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.features-section .card-body {
+    background-color: #fff;
+    border-radius: 0.25rem;
+}
+
+.record {
+    font-weight: bold;
+}
+
+.ele-divider {
+    margin: 0 10px;
+}
+
+.other a {
+    text-decoration: none;
+}

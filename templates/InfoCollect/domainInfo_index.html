@@ -1,0 +1,81 @@
+{% extends 'InfoCollect/base.html' %}
+
+ {% block title %}
+            <title>域名信息</title>
+ {% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>域名信息</h1>
+    <div style="padding: 50px 0;">
+      <form class="bs-example bs-example-form" role="form">
+        <div class="row">
+          <div class="col-lg-10">
+            <div class="input-group">
+              <input id="inputField" type="text" class="form-control" placeholder="请输入网站ip地址进行域名信息检测，example:baidu.com">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="startScan()">Start Scanning</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <p id="scanStatus"></p>
+  </div>
+</div>
+<table class="table">
+  <thead id="scanResultHead">
+  </thead>
+  <tbody id="scanResult">
+    <!-- 这里的内容将由JavaScript动态生成 -->
+  </tbody>
+</table>
+    <script>
+function startScan() {
+    // 清空表格内容
+    $('#scanResultHead').empty();
+    $('#scanResult').empty();
+    $('#scanStatus').text('正在扫描，请稍等...');
+    var inputText = $('#inputField').val().trim();
+    if(inputText !== '') {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'InfoCollect:domainInfo' %}",
+            data: {input: inputText},
+            success: function(response) {
+                console.log('扫描结果：', response);
+                $('#scanStatus').text('扫描完成');
+          if ('scan_result' in response) {
+                    var scanData = response['scan_result'];
+                          // 生成表头
+                    var tableHead = '<tr>';
+                    Object.keys(scanData).forEach(function(key) {
+                        tableHead += '<th>' + key + '</th>';
+                    });
+                    tableHead += '</tr>';
+                    $('#scanResultHead').append(tableHead);
+
+                    // 遍历数据，并添加到表格中
+                    var rowData = '<tr>';
+                    Object.values(scanData).forEach(function(value) {
+                        rowData += '<td>' + value + '</td>';
+                    });
+                    $('#scanResult').append(rowData);
+                    rowData += '</tr>';
+                    $('#scanStatus').text('扫描完成');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('发生错误：', error);
+                alert(error);
+            }
+        });
+    } else {
+        alert('请输入要扫描的内容');
+    }
+}
+</script>
+
+{% endblock body %}
