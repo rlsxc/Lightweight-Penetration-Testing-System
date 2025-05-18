@@ -2,9 +2,6 @@ from django.contrib import admin
 from .models import Middleware_vuln
 from import_export.admin import ImportExportModelAdmin #https://www.cnblogs.com/deali/p/14329228.html
 # Register your models here.
-
-
-
 # 中间件扫描
 @admin.register(Middleware_vuln)
 class Middleware_vulnAdmin(ImportExportModelAdmin):

@@ -138,14 +138,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'htaddd80@qq.com'
-EMAIL_HOST_PASSWORD = 'htaddd80'
+EMAIL_HOST_PASSWORD = 'puvtwxifvqewdgch'
 # EMAIL_USE_SSL = True # 是否使用SSL加密，qq企业邮箱要求使用
 EMAIL_FROM = 'LPTS官方'
 EMAIL_SUBJECT = 'LPTS激活邮件'
 EMAIL_USE_TLS = True # 是否使用TLS安全传输协议 ，这⾥必须是True，否则发送不成功
 # AWVS配置 AWVS URL和API key  服务器版本
-API_URL = 'https://127.0.0.1:3443/'
-API_KEY = '1986ad8c0a5b3df4d7028d5f3c06e936c134f909c7dc341b2b0e04f7b902ecd24'
+API_URL = 'https://localhost:3443/'
+API_KEY = '1986ad8c0a5b3df4d7028d5f3c06e936c361aa6d510e749a4b5f476a0e393ea9d'
 # trailing slash jquery 发送数据时用
 APPEND_SLASH=False
 

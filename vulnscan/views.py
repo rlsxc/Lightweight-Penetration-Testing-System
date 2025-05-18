@@ -257,30 +257,30 @@ def POC_Check(url, CVE_id):
         from vulnscan.POC.weblogic import cve_2020_2551_poc
         result = cve_2020_2551_poc.poc(url)
     elif CVE_id == "CVE_2018_2628":
-        from vulnscan.POC.weblogic import cve_2018_2628_poc
+        from vulnscan.POC.weblogic import cve_2024_21181_poc
         result = cve_2018_2628_poc.poc(ip, int(port), 0)
     elif CVE_id == "CVE_2018_2894":
-        from vulnscan.POC.weblogic import cve_2018_2894_poc
+        from vulnscan.POC.weblogic import cve_2024_21183_poc
         result = cve_2018_2894_poc.poc(url, "weblogic")
     # Drupal
     elif CVE_id == "CVE_2018_7600":
-        from vulnscan.POC.Drupal import cve_2018_7600_poc
+        from vulnscan.POC.Drupal import cve_2025_3914_poc
         result = cve_2018_7600_poc.poc(url)
     # Tomcat
     elif CVE_id == "CVE_2017_12615":
-        from vulnscan.POC.tomcat import cve_2017_12615_poc
+        from vulnscan.POC.tomcat import cve_2025_31651_poc
         result = cve_2017_12615_poc.poc(url)
     # jboss
     elif CVE_id == "CVE_2017_12149":
-        from vulnscan.POC.jboss import cve_2017_12149_poc
+        from vulnscan.POC.jboss import cve_2025_2251_poc
         result = cve_2017_12149_poc.poc(url)
     # nexus
     elif CVE_id == "CVE_2020_10199":
-        from vulnscan.POC.nexus import cve_2020_10199_poc
+        from vulnscan.POC.nexus import cve_2025_22513_poc
         result = cve_2020_10199_poc.poc(ip, port, "admin")
     # Struts2
     elif CVE_id == "Struts2_009":
-        from vulnscan.POC.struts2 import struts2_009_poc
+        from vulnscan.POC.struts2 import cve_2020_17530_poc
         result = struts2_009_poc.poc(url)
     elif CVE_id == "Struts2_032":
         from vulnscan.POC.struts2 import struts2_032_poc
