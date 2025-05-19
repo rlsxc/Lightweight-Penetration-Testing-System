@@ -329,7 +329,7 @@ class Controller:
             )
         except ValueError:
             # If the user neither provides the port nor scheme, guess them based
-            # on standard webscan characteristics
+            # on standard website characteristics
             scheme = detect_scheme(host, 443)
             port = STANDARD_PORTS[scheme]
 

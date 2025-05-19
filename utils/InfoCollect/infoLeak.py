@@ -86,4 +86,4 @@ def get_infoleak(url=''):
 
 
 if __name__ == '__main__':
-    print(get_infoleak('https://2d4972d8-6ccc-40a4-87f5-49bdf3beb9b5.challenge.ctf.show/'))
+    print(get_infoleak())
