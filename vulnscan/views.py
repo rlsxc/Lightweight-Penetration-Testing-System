@@ -253,38 +253,36 @@ def update_Middleware_data(url, CVE_id, Time, result):
 def POC_Check(url, CVE_id):
     ip, port = urlparse(url).netloc.split(':')
     # Weblogic
-    if CVE_id == "CVE_2020_2551":
-        from vulnscan.POC.weblogic import cve_2020_2551_poc
-        result = cve_2020_2551_poc.poc(url)
-    elif CVE_id == "CVE_2018_2628":
+
+    if CVE_id == "cve_2024_21181":
         from vulnscan.POC.weblogic import cve_2024_21181_poc
-        result = cve_2018_2628_poc.poc(ip, int(port), 0)
-    elif CVE_id == "CVE_2018_2894":
+        result = cve_2024_21181_poc.poc(ip, int(port), 0)
+    elif CVE_id == "cve_2024_21183":
         from vulnscan.POC.weblogic import cve_2024_21183_poc
-        result = cve_2018_2894_poc.poc(url, "weblogic")
+        result = cve_2024_21183_poc.poc(url, "weblogic")
     # Drupal
-    elif CVE_id == "CVE_2018_7600":
+    elif CVE_id == "cve_2025_3914":
         from vulnscan.POC.Drupal import cve_2025_3914_poc
-        result = cve_2018_7600_poc.poc(url)
+        result = cve_2025_3914_poc.poc(url)
+    elif CVE_id == "cve_2024_13258":
+        from vulnscan.POC.Drupal import cve_2024_13258_poc
+        result = cve_2024_13258_poc.poc(url)
     # Tomcat
-    elif CVE_id == "CVE_2017_12615":
+    elif CVE_id == "cve_2025_31651":
         from vulnscan.POC.tomcat import cve_2025_31651_poc
-        result = cve_2017_12615_poc.poc(url)
+        result = cve_2025_31651_poc.poc(url)
     # jboss
-    elif CVE_id == "CVE_2017_12149":
+    elif CVE_id == "cve_2025_2251":
         from vulnscan.POC.jboss import cve_2025_2251_poc
-        result = cve_2017_12149_poc.poc(url)
+        result = cve_2025_2251_poc.poc(url)
     # nexus
-    elif CVE_id == "CVE_2020_10199":
+    elif CVE_id == "cve_2025_22513":
         from vulnscan.POC.nexus import cve_2025_22513_poc
-        result = cve_2020_10199_poc.poc(ip, port, "admin")
+        result = cve_2025_22513_poc.poc(ip, port, "admin")
     # Struts2
-    elif CVE_id == "Struts2_009":
+    elif CVE_id == "cve_2020_17530":
         from vulnscan.POC.struts2 import cve_2020_17530_poc
-        result = struts2_009_poc.poc(url)
-    elif CVE_id == "Struts2_032":
-        from vulnscan.POC.struts2 import struts2_032_poc
-        result = struts2_032_poc.poc(url)
+        result = cve_2020_17530_poc.poc(url)
     return result
 
 

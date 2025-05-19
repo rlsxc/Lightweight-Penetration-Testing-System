@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'vulnscan',
     'import_export',
     'dirscan',
-    'website',
+    'webscan',
 ]
 
 MIDDLEWARE = [
