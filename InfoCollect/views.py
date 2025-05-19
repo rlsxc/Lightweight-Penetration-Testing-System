@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.core.exceptions import ValidationError
-from utils.InfoCollect import PortScan, InformationGathering, infoLeak
+from utils.InfoCollect import PortScan, InformationGathering, SubDomainSearch, infoLeak
 
 # Create your views here.
 @login_required(login_url='users:login')
@@ -69,13 +69,13 @@ def info_collection_view(request):
             param1 = validate_input(param1)
             webweight = InformationGathering.webweight(param1)
             domaininfo = InformationGathering.get_domain_info(param1)
-
+            subdomain = SubDomainSearch.subDominMining(param1)
             side = InformationGathering.side_scan(param1)
             data = {
                 '网站权重': webweight,
                 '域名信息': domaininfo,
                 '旁站': side,
-
+                '子域名信息': subdomain
             }
             return JsonResponse(data, json_dumps_params={'indent': 4})
         except ValidationError as e:
@@ -123,7 +123,23 @@ def sideline_index(request):
     """旁站扫描"""
     return render(request, 'InfoCollect/sideline.html')
 
+@login_required(login_url='users:login')
+def subdomain_index(request):
+    return render(request, 'InfoCollect/subdomain_index.html')
 
+def subdomain(request):
+    if request.method == 'POST':
+        try:
+            ip_address = request.POST.get('input')
+            ip_address = validate_input(ip_address)
+            scan_result = SubDomainSearch.subDominMining(ip_address)
+            return JsonResponse({'scan_result': scan_result})
+        except ValidationError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f"子域名挖掘失败：{str(e)}"}, status=500)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
 @login_required(login_url='users:login')
 def infoleak_index(request):

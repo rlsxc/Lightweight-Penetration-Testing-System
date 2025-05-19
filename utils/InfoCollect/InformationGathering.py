@@ -103,10 +103,10 @@ def webweight(domain):
 '''
 
 header = {
-    'Host': 'api.website.cc',
-    'Origin': 'http://website.cc',
+    'Host': 'api.webscan.cc',
+    'Origin': 'http://webscan.cc',
     'Pragma': 'no-cache',
-    'Referer': 'http://website.cc/',
+    'Referer': 'http://webscan.cc/',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132'
 }
 def side_scan(ip):
