@@ -335,7 +335,7 @@ max-retries = 1
 # scheme = http
 # proxy = localhost:8080
 # proxy-file = /path/to/proxies.txt
-# replay-proxy = localhost:8000
+# replay-proxy = localhost:8080
 
 [advanced]
 crawl = False

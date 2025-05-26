@@ -5,7 +5,7 @@ body {
 }
 
 .hero-section {
-    background-image: url("{% static 'img/hero-background.jpg' %}"); /* 替换为你的背景图片 */
+    background-image: url("../img/background.jpg"); /* 使用相对路径 */
     background-size: cover;
     background-position: center;
     color: white;

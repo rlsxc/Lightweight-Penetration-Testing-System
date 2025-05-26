@@ -3040,7 +3040,7 @@
     },
     "Emlog": {
       "cats": [5],
-      "icon": "favicon.ico",
+
       "implies": ["PHP", "Mysql"],
       "website": "http://www.emlog.net",
       "script": "/include/lib/js/common_tpl.js",

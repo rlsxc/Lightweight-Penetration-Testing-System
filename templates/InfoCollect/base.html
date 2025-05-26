@@ -1,29 +1,31 @@
+
 {% load static %}
 {% include 'layout/header.html'%}
 <!DOCTYPE html>
-<html lang="en">    
-<head>    
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     {% block title %}
             <title>端口扫描</title>
     {% endblock %}
-    <!-- 引入 Bootstrap CSS -->  
+    <!-- 引入 Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <!-- 字体-->
     <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
-</head>    
+</head>
 <body>
 {% block body %}
 <div class="container">
   <div class="jumbotron">
-    <h1>端口扫描</h1>
-    <div style="padding: 50px 0;">
+
+    <h2>端口扫描</h2>
+   <div style="padding: 50px 0;">
       <form class="bs-example bs-example-form" role="form">
         <div class="row">
           <div class="col-lg-10">
             <div class="input-group">
               <input id="inputField" type="text" class="form-control" placeholder="请输入网站ip地址进行端口扫描，支持域名，example:baidu.com">
-              <span class="input-group-btn">
+                 <span class="input-group-btn">
                 <button class="btn btn-primary" type="button" onclick="startScan()">Start Scanning</button>
               </span>
             </div>
@@ -84,5 +86,33 @@ function startScan() {
 {% endblock body %}
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-</body>    
+</body>
 </html>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    </script>
+</div>

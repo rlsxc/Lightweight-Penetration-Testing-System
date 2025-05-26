@@ -4898,7 +4898,7 @@ fastlane/report.xml
 fastlane/screenshots
 fastlane/test_output
 fault
-favicon.ico
+
 fcadmin
 fcgi-bin
 fcgi-bin/

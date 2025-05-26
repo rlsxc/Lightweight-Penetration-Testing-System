@@ -80,3 +80,66 @@ function startScan() {
 </script>
 
 {% endblock body %}
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    </script>
+
+
+success: function(response) {
+    $('#scanResultHead').empty();
+    $('#scanResult').empty();
+    console.log('Response:', response);
+    if ('scan_result' in response) {
+        var responseString = response.scan_result;
+        console.log('scan_result:', responseString);
+        if (typeof responseString === 'string' && responseString.trim() !== '') {
+            var responseArray = responseString.split(',');
+            responseArray = responseArray.map(function(item) {
+                return item.trim();
+            }).filter(item => item);
+            $('#scanResultHead').append('<tr><th>Info</th></tr>');
+            if (responseArray.length > 0) {
+                for (var i = 0; i < responseArray.length; i += 1) {
+                    $('#scanResult').append('<tr><td>' + responseArray[i] + '</td></tr>');
+                }
+            } else {
+                $('#scanResult').append('<tr><td>' + responseString + '</td></tr>');
+            }
+            $('#scanStatus').text('扫描完成');
+        } else {
+            $('#scanResultHead').append('<tr><th>Info</th></tr>');
+            $('#scanResult').append('<tr><td>' + (responseString || '未检测到 CMS') + '</td></tr>');
+            $('#scanStatus').text('扫描完成');
+        }
+    } else if ('error' in response) {
+        $('#scanResultHead').append('<tr><th>错误</th></tr>');
+        $('#scanResult').append('<tr><td>' + response.error + '</td></tr>');
+        $('#scanStatus').text('扫描失败');
+    } else {
+        $('#scanStatus').text('扫描失败：未知错误');
+    }
+}
+</div>

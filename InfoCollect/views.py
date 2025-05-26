@@ -163,29 +163,51 @@ def infoleak(request):
 def CMS_index(request):
     return render(request, 'InfoCollect/CMS.html')
 
+
 def CMS(request):
     if request.method == 'POST':
         try:
             ip_address = request.POST.get('input')
+            print(f"Input received: {ip_address}")
             ip_address = validate_input(ip_address)
-            # 确保目标以 http:// 或 https:// 开头
+            print(f"Validated input: {ip_address}")
             if not ip_address.startswith(('http://', 'https://')):
                 ip_address = f'http://{ip_address}'
-            # 发送 POST 请求到 whatweb.net
-            response = requests.post(
-                'https://whatweb.net/whatweb.php',
-                data={'target': ip_address},
-                timeout=10  # 设置超时
+            print(f"Sending request to whatcms.org with target: {ip_address}")
+
+            api_key = "w27f6ho0q0x69qrcig08tb4klczp5rqu46w9y4v6fq4bcjrtqj5c2jqd56llglvd9u750e"
+            response = requests.get(
+                f"https://whatcms.org/API/CMS?key={api_key}&url={ip_address}",
+                timeout=10
             )
-            response.raise_for_status()  # 检查状态码
-            scan_result = response.text
+            print(f"Response status code: {response.status_code}")
+            response.raise_for_status()
+
+            result = response.json()
+            print(f"API response: {result}")
+            print(f"Success field: {result.get('success', False)}")  # 调试：打印 success 字段
+            if 'result' in result:  # 简化条件，只检查 result 字段
+                if result['result'].get('code') == 120:  # Rate Limited
+                    retry_seconds = result['result'].get('retry_in_seconds', 0)
+                    return JsonResponse({'error': f"API 速率限制，请在 {retry_seconds} 秒后重试"}, status=429)
+                scan_result = result['result'].get('name', 'Unknown CMS')
+                print(f"Extracted name: {scan_result}")
+            else:
+                scan_result = 'Unknown CMS'
+            print(f"Response content: {scan_result}")
             return JsonResponse({'scan_result': scan_result})
         except requests.exceptions.Timeout:
+            print("Timeout occurred")
             return JsonResponse({'error': '请求超时，请稍后重试'}, status=504)
         except requests.exceptions.RequestException as e:
+            print(f"Request error: {str(e)}")
             return JsonResponse({'error': f"CMS 识别失败：{str(e)}"}, status=500)
         except ValidationError as e:
+            print(f"Validation error: {str(e)}")
             return JsonResponse({'error': str(e)}, status=400)
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
+            return JsonResponse({'error': f"CMS 识别失败：{str(e)}"}, status=500)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
